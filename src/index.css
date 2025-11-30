@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f7f9fc;
+  color: #0f172a;
+
+  /* Watermark metadata for course/team */
+  --course-code: 'EECE 455';
+  --team-members: 'Haya Karanouh · Zeinab Harb · Maya Zeaiter · Omar Obeid';
+
+  --bg-base: #f7f9fc;
+  --bg-surface: rgba(255, 255, 255, 0.86);
+  --bg-panel: rgba(255, 255, 255, 0.94);
+  --bg-muted: rgba(234, 242, 255, 0.7);
+  --border-soft: #d6deeb;
+  --text-primary: #0f172a;
+  --text-muted: #475569;
+  --glow-primary: rgba(37, 99, 235, 0.24);
+  --glow-secondary: rgba(16, 185, 129, 0.26);
+  --card-shadow: 0 15px 45px rgba(37, 99, 235, 0.18);
+}
+
+.theme-dark {
+  --bg-base: #0f172a;
+  --bg-surface: rgba(15, 23, 42, 0.7);
+  --bg-panel: rgba(17, 24, 39, 0.92);
+  --bg-muted: rgba(30, 41, 59, 0.6);
+  --border-soft: rgba(148, 163, 184, 0.3);
+  --text-primary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --glow-primary: rgba(59, 130, 246, 0.16);
+  --glow-secondary: rgba(16, 185, 129, 0.16);
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@layer base {
+  * {
+    @apply border-slate-800;
+  }
+
+  body {
+    color: var(--text-primary);
+  }
+}
+
+/* Subtle background grid + glow layers */
+.app-gradient {
+  position: relative;
+  isolation: isolate;
+}
+
+.app-gradient::before,
+.app-gradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.app-gradient::before {
+  background: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.12), transparent 35%),
+    radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.12), transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(248, 113, 113, 0.1), transparent 30%);
+}
+
+.app-gradient::after {
+  background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.02) 0,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 50px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.02) 0,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 50px
+    );
+  background-size: 50px 50px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+  z-index: -3;
+}
+
+.glass {
+  background: var(--bg-surface);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-soft);
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.32);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.animate-fade {
+  animation: fadeSlide 0.6s ease-out both;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.8s ease-in-out infinite;
+}
+
+.card-hover {
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow), 0 0 0 1px rgba(255, 255, 255, 0.02);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Light/dark overrides for heavily-used utility classes */
+.theme-light .bg-slate-950,
+.theme-light .bg-slate-950\/50,
+.theme-light .bg-slate-950\/60,
+.theme-light .bg-slate-950\/70,
+.theme-light .bg-slate-950\/80,
+.theme-light .bg-slate-950\/90,
+.theme-light .bg-slate-900,
+.theme-light .bg-slate-900\/50,
+.theme-light .bg-slate-900\/60,
+.theme-light .bg-slate-900\/70,
+.theme-light .bg-slate-900\/80,
+.theme-light .bg-slate-900\/90 {
+  background-color: var(--bg-panel) !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-light .border-slate-800,
+.theme-light .border-slate-800\/60,
+.theme-light .border-slate-800\/70,
+.theme-light .border-slate-800\/80,
+.theme-light .border-slate-700 {
+  border-color: var(--border-soft) !important;
+}
+
+.theme-light .text-slate-50,
+.theme-light .text-white {
+  color: var(--text-primary) !important;
+}
+
+.theme-light .text-slate-300 {
+  color: #6b7280 !important;
+}
+
+.theme-light .text-slate-400,
+.theme-light .text-slate-500 {
+  color: #5b6473 !important;
+}
+
+.theme-light .app-gradient::before {
+  background: radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.12), transparent 35%),
+    radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.12), transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.08), transparent 30%),
+    radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.35), transparent 30%),
+    radial-gradient(circle at 70% 40%, rgba(191, 219, 254, 0.4), transparent 30%);
+}
+
+.theme-light .app-gradient::after {
+  background-image: linear-gradient(
+      90deg,
+      rgba(15, 23, 42, 0.05) 0,
+      rgba(15, 23, 42, 0.05) 1px,
+      transparent 1px,
+      transparent 50px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.05) 0,
+      rgba(15, 23, 42, 0.05) 1px,
+      transparent 1px,
+      transparent 50px
+    ),
+    radial-gradient(circle at 15% 30%, rgba(37, 99, 235, 0.12), transparent 22%),
+    radial-gradient(circle at 85% 75%, rgba(16, 185, 129, 0.12), transparent 22%);
+}
+
+.theme-dark .glass {
+  background: var(--bg-surface);
+}
+
+.theme-light button,
+.theme-light input,
+.theme-light textarea {
+  color: var(--text-primary);
+}
