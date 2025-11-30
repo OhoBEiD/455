@@ -566,7 +566,7 @@ function App() {
   const [lastEncryptResult, setLastEncryptResult] = useState<DESResult | null>(null)
   const [lastDecryptResult, setLastDecryptResult] = useState<DESResult | null>(null)
   const [executionTime, setExecutionTime] = useState<number | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [, setError] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [selectedSBox, setSelectedSBox] = useState(0)
   const [avalancheDiffs, setAvalancheDiffs] = useState<AvalancheRoundDiff[] | null>(null)
@@ -581,25 +581,25 @@ function App() {
   const [decryptFlowStep, setDecryptFlowStep] = useState(0)
   const [outputFormat, setOutputFormat] = useState<'hex' | 'binary'>('hex')
   const [lastKeyHex, setLastKeyHex] = useState<string | null>(null)
-  const [studentId, setStudentId] = useState('')
-  const [studentName, setStudentName] = useState('')
-  const [examId, setExamId] = useState('Exam-1')
-  const [versionLabel, setVersionLabel] = useState('A')
+  const [studentId] = useState('')
+  const [studentName] = useState('')
+  const [examId] = useState('Exam-1')
+  const [versionLabel] = useState('A')
   const [studentAnswerHex, setStudentAnswerHex] = useState('')
   const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult | null>(null)
   const [gradebookRows, setGradebookRows] = useState<GradeRow[]>([])
   const [roster, setRoster] = useState<RosterRow[]>([])
   const [gradingError, setGradingError] = useState<string | null>(null)
-  const [showGradeModal, setShowGradeModal] = useState(false)
+  const [, setShowGradeModal] = useState(false)
   const [selectedMode, setSelectedMode] = useState<'encrypt' | 'decrypt'>('encrypt')
-  const [pendingGrade, setPendingGrade] = useState<GradeRow | null>(null)
+  const [, setPendingGrade] = useState<GradeRow | null>(null)
   const [authEmail, setAuthEmail] = useState('')
   const [authPassword, setAuthPassword] = useState('')
   const [authName, setAuthName] = useState('')
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin')
   const [authToken, setAuthTokenState] = useState<string | null>(null)
   const [authBusy, setAuthBusy] = useState(false)
-  const [introLoader, setIntroLoader] = useState(false)
+  const [, setIntroLoader] = useState(false)
   const [textInput, setTextInput] = useState('')
   const [textCipherHex, setTextCipherHex] = useState('')
   const [textCipherBase64, setTextCipherBase64] = useState('')
@@ -1591,15 +1591,6 @@ const copyCiphertext = () => {
     }
   }
 
-  const handleRosterSelection = (id: string) => {
-    const match = roster.find((r) => r.studentId === id)
-    if (!match) return
-    setStudentId(match.studentId)
-    setStudentName(match.name)
-    setExamId(match.examId)
-    setVersionLabel(match.version)
-  }
-
   const loadTestVector = (vector: any) => {
     // Set the mode
     setDesMode(vector.mode)
@@ -1666,35 +1657,6 @@ const copyCiphertext = () => {
     setActiveTab('encrypt')
   }
 
-  const exportGradebookCsv = () => {
-    if (!gradebookRows.length) return
-    const lines = ['StudentID,Name,ExamID,Version,Q1,Q2,Q3,Total,Letter,Diagnosis']
-    gradebookRows.forEach((row) => {
-      lines.push(
-        [
-          row.studentId,
-          row.name,
-          row.examId,
-          row.version,
-          row.q1,
-          row.q2,
-          row.q3,
-          row.total,
-          row.letter_grade ?? letterForScore(row.total),
-          row.diagnosis ?? '',
-        ].join(','),
-      )
-    })
-    const blob = new Blob([lines.join('\n')], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `grades-${examId}-${Date.now()}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-
-  const clearGradebook = () => setGradebookRows([])
   const handleAuth = async () => {
     if (!hasApi) {
       setGradingError('API URL not configured; cannot authenticate.')
@@ -2019,20 +1981,6 @@ const copyCiphertext = () => {
         </div>
       </div>
     )
-  }
-
-  const syncGradeToApi = async (row: GradeRow) => {
-    if (!hasApi || !authToken) return
-    try {
-      await api.saveGrade({
-        ...row,
-        q_scores: { q1: row.q1, q2: row.q2, q3: row.q3 },
-        versionLabel: (row as any).versionLabel ?? row.version,
-        letter_grade: row.letter_grade,
-      })
-    } catch (error) {
-      console.warn('Grade sync failed', error)
-    }
   }
 
   return (
